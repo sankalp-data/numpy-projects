@@ -1,3 +1,5 @@
+'''⚠️                IN                  PROGRESS               ⚠️'''
+
 import numpy as np
 import json
 from pprint import pprint
@@ -49,6 +51,40 @@ class Student:
         open_report_file(data)
         print("✅ Student data has been successfully uploaded!")
         pprint(data)
+
+
+    def individual_student_stat(self,roll_no):
+        '''Stats of any student'''
+
+        data = loading_file()
+
+        if not data:
+            print("Nothing in report file.")
+            return
+
+        if f"Details of {roll_no}" not in data.keys():
+            print("No Such Student!")
+            return
+        
+        list_of_marks = []
+        for marks in data[f"Details of {roll_no}"]["Performance"].values():
+            list_of_marks.append(marks)
+
+        print(f"Average Marks of {roll_no} = {np.mean(list_of_marks):.2f}")
+        print(f"Median Marks of {roll_no} = {np.median(list_of_marks):.2f}")
+
+    '''UPCOMING FEATURE'''
+    # def sub_wise_analytics(self):
+    #     data = loading_file()
+
+    #     if not data:
+    #         print("Nothing")
+
+
+
+
+        
+
 
 
 

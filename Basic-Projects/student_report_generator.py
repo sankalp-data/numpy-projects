@@ -54,7 +54,8 @@ class Student:
 
 
     def individual_student_stat(self,roll_no):
-        '''Stats of any student'''
+        '''Display statistics for an individual student.'''
+
 
         data = loading_file()
 
@@ -75,7 +76,8 @@ class Student:
         print(f"Percentage of roll number {roll_no} = {(np.sum(list_of_marks)/(len(list_of_marks)*100))*100:.2f}%")
 
     def comparing_students(self):
-        '''Comparing different students'''
+        '''Compare performance across multiple students.'''
+
 
         data = loading_file()
         if not data:
@@ -126,7 +128,7 @@ class Student:
 
     
     def sub_wise_analysis(self):
-        '''Display Subject Wise Analysis'''
+        '''Display subject-wise performance analysis.'''
 
         data = loading_file()
         if not data:

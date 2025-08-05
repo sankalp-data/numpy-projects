@@ -1,18 +1,11 @@
 {
-    "Details of 37": {
-        "Name": "Cipher",
-        "Performance": {
-            "Computer Science": 99,
-            "Aptitude": 89,
-            "Maths": 78
-        }
-    },
     "Details of 34": {
         "Name": "Hitesh",
         "Performance": {
             "Computer Science": 78.0,
             "Maths": 89.0,
-            "Aptitude": 56.0
+            "Aptitude": 56.0,
+            "ML": 67.0
         }
     }
 }

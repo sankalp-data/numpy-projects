@@ -165,33 +165,87 @@ class Student:
                 print(f"\n📘 Subject: {subject}")
                 print("No data available.")
 
+    def update_or_delete(self):
+        '''Delete a student's record or update existing student's marks'''
 
+        data = loading_file()
 
+        if not data:
+            print("Nothing in report file.")
+            return
+
+        action = input("Enter 1 for Updating existing student's marks\nEnter 2 for Deleting a Student's Record\n>>>> ").strip()
+
+        if action not in ["1", "2"]:
+            print("❌ Please reply with 1 or 2.")
+            return
+
+        roll_no = input("Enter Roll Number: ").strip()
+        student_key = f"Details of {roll_no}"
+
+        if student_key not in data:
+            print("❌ No such student found.")
+            return
+
+        if action == "2":
+            # Delete student record
+            confirm = input(f"Are you sure you want to delete record of roll number {roll_no}? (yes/no): ").strip().lower()
+            if confirm == "yes":
+                del data[student_key]
+                open_report_file(data)
+                print("✅ Student record deleted.")
+            
+        
+            else:
+                print("Cancelled.")
+            return
+
+        # === Update marks section ===
+        while True:
+            update_choice = input("\nEnter 1 to edit subject marks\nEnter 2 to add new subjects\nEnter 3 to quit\n>>>> ").strip()
+
+            if update_choice == "1":
+                subjects = data[student_key]["Performance"]
+                if not subjects:
+                    print("This student has no subjects recorded yet.")
+                    continue
+                print("\n📘 Current Subjects:")
+                for sub in subjects:
+                    print(f"- {sub}: {subjects[sub]}")
+
+                sub_to_edit = input("Enter subject name to update: ").strip()
+                if sub_to_edit in subjects:
+                    try:
+                        new_marks = float(input(f"Enter new marks for {sub_to_edit}: ").strip())
+                        subjects[sub_to_edit] = new_marks
+                        print(f"✅ Updated marks for {sub_to_edit}.")
+                    except ValueError:
+                        print("❌ Invalid marks entered.")
+                else:
+                    print("❌ Subject not found.")
+
+            elif update_choice == "2":
+                try:
+                    sub_name = input("Enter new subject name: ").strip()
+                    if sub_name in data[student_key]["Performance"]:
+                        print("⚠️ Subject already exists. Use option 1 to update it.")
+                        continue
+                    marks = float(input(f"Enter marks for {sub_name}: ").strip())
+                    data[student_key]["Performance"][sub_name] = marks
+                    print(f"✅ Added subject {sub_name}.")
+                except ValueError:
+                    print("❌ Invalid marks entered.")
+
+            elif update_choice == "3":
+                break
+            else:
+                print("❌ Please enter a valid choice (1, 2, or 3).")
+
+        # Save changes after update
+        open_report_file(data)
+        print("✅ Student record has been updated.")
 
 
 
             
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
     

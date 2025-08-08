@@ -1,4 +1,3 @@
-'''⚠️                IN                  PROGRESS               ⚠️'''
 
 import numpy as np
 import json
@@ -122,7 +121,7 @@ class Student:
         for roll, info in stats.items():
             print(f"Roll: {roll} | Name: {info['Name']} | Avg: {info['Average']:.2f} | %: {info['Percentage']:.2f}")
 
-        # Optional: Print top performer
+        #Print top performer
         top = max(stats.items(), key=lambda x: x[1]["Average"])
         print(f"\n🏆 Top Performer: {top[1]['Name']} (Roll Number {top[0]}) with Average {top[1]['Average']:.2f}")
 
@@ -245,7 +244,4 @@ class Student:
         open_report_file(data)
         print("✅ Student record has been updated.")
 
-
-
-            
     

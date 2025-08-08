@@ -1,47 +1,60 @@
-# 🎓 Student Report Generator (In Progress)
+# 📚 Student Report Generator
 
-This is a basic Python-based **Student Report Generator** that allows users to:
+A Python-based command-line application to manage and analyze student academic performance data.  
+This tool stores data in a JSON file, calculates statistics using **NumPy**, and provides multiple options to **add**, **update**, **delete**, and **analyze** student reports.
 
-- Input student name and roll number
-- Enter marks for multiple subjects
-- Automatically store and structure student performance
+---
 
-## 🚀 Features
+## ✨ Features
 
-- Clean class-based OOP design
-- Input validation for subject marks
-- Modular and easy to extend
-- (Coming Soon) JSON-based data saving/loading
-- (Planned) Performance summary & grading logic using NumPy
+- **Add Student Records**  
+  Enter student name, roll number, subjects, and marks. Data is stored in a JSON file (`report_file.json`).
 
-## ⚒️ Technologies Used
+- **View Individual Student Statistics**  
+  Get **average**, **median**, and **percentage** for a specific student.
 
-- Python
-- NumPy
-- JSON
+- **Compare Students**  
+  Compare multiple students’ performance to find the **top performer**.
 
-## 📌 Why This Project?
+- **Subject-wise Analysis**  
+  See average, highest, and lowest marks for each subject across all students.
 
-I’m currently learning Python and exploring OOP and NumPy together. This project is:
-- A learning experiment in **object-oriented design**
-- A foundation for more advanced **student performance analytics**
-- A step toward working with **data persistence (file handling)**
+- **Update or Delete Records**  
+  - Update existing marks
+  - Add new subjects
+  - Delete a student’s record
 
-## ⏳ Project Status
+---
 
-This project is **in active development** and will be gradually upgraded with:
-- Data saving/loading (JSON)
-- Summary statistics (mean, grade, etc.)
-- Better CLI interface
-- Exception handling improvements
+## 📂 Project Structure
 
-## 🙌 Contribution
+ - Basic-Projects/
+ - └── Student-Report-Generator/
+ - ├── student_report_generator.py # Main program logic
+ - ├── report_file.json # Stores all student data
+ - └── README.md # Project documentation
 
-This is a solo learning project, but suggestions and feedback are welcome!
 
-## 🧠 Future Enhancements
+# 🚀 How to Use
 
-- Grade calculation
-- Store multiple students
-- Export reports to file
-- CLI or GUI interface
+1. Clone the repository
+ - git clone https://github.com/sankalp-data/numpy-projects.git
+ - cd Basic-Projects/Student-Report-Generator
+
+2. Run the script
+ - python student_report_generator.py
+
+3. Choose an operation
+   > Inside the script, you can call:
+   - taking_input(name, roll_no) → Add new student
+   - individual_student_stat(roll_no) → View stats of a student
+   - comparing_students() → Compare students
+   - sub_wise_analysis() → Analyze by subject
+   - update_or_delete() → Update or delete a record
+
+
+# 🔮 Possible Improvements
+ - Add a main menu for interactive navigation
+ - Export reports to CSV or Excel
+ - Add GPA calculation
+ - Build a GUI interface

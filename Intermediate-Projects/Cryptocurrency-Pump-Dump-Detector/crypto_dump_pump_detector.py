@@ -12,6 +12,7 @@ data = np.genfromtxt(r"C:\Users\usar\Downloads\btc_hourly_ohlcv.csv",delimiter="
 
 def volume_spike_detector():
     '''Calculate average volume over past week.'''
+    
 
     
 

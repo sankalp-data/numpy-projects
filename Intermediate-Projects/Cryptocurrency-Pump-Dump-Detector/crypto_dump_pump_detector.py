@@ -8,13 +8,14 @@ with open(r"C:\Users\usar\Downloads\btc_hourly_ohlcv.csv",encoding="utf-8") as f
 
 
 data = np.genfromtxt(r"C:\Users\usar\Downloads\btc_hourly_ohlcv.csv",delimiter=",",dtype=None,encoding="utf-8",skip_header=1)
-timestamps = np.array([row[0] for row in data])
+timestamps = np.array([row[0] for row in data],dtype="datetime64[s]")
+print(timestamps[0])
 volume = np.array([row[5] for row in data])
 high = np.array([row[2] for row in data])
 low = np.array([row[3] for row in data])
 close = np.array([row[4] for row in data])
 open_ = np.array([row[1] for row in data])
-dates = np.array([ts[:10] for ts in timestamps], dtype="datetime64[D]")
+dates = np.array([np.datetime64(ts,"D") for ts in timestamps])
 
 # Dataset start & end dates
 # Dataset start & end dates
@@ -62,6 +63,34 @@ def volume_spike_detector():
     if len(spikes) > 0:
         print("Spike volumes:", spikes)
         
+
+'''⚠️IN  PROGRESS''' 
+# def price_range():
+#     '''Check Price Range is normal or not'''
+#     date = input("Date (YYYY-MM-DD):")
+#     time = input("Time (HH:MM:SS): ")
+
+#     try:
+#         check1 = np.datetime64(datetime.strptime(date,"%Y-%m-%d").date(),"D")
+#         check2 = np.datetime64(datetime.strptime(time,"%H:%M:%S").time(),"s")
+#     except ValueError:
+#         print("Invalid Time/Date format, correct format:\nFor date: YYYY-MM-DD\nFor time: HH:MM:SS")
+#         return
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+
+
 
     
 

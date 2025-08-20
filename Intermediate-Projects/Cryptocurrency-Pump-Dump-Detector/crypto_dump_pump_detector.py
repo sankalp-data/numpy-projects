@@ -55,10 +55,34 @@ def volume_spike_detector():
     print(f"TOTAL SPIKES: {len(details['Spike Points'])}")
 
 
-'''IN PROGRESS---'''
-# def moving_average():
-    
-#     number_of_days = int(input("Moving Average of last days: "))
+# STILL IN PROGRESS⚠️
+'''def moving_average():
+    try:
+        days = int(input("Enter number of days for moving average: "))
+    except ValueError:
+        print("Invalid number!")
+        return
+
+    if days <= 0:
+        print("Days must be greater than 0")
+        return
+
+    # moving average on CLOSE price
+    window_size = days
+    result = []
+
+    # loop through dataset with sliding window
+    for i in range(len(close) - window_size + 1):
+        avg = np.mean(close[i:i+window_size])
+        result.append((timestamps[i+window_size-1], float(avg)))
+
+    # show last 10 values for quick view
+    print(f"\nMoving Average ({days} days) calculated on Close Price:")
+    for ts, val in result[-10:]:   # last 10 values
+        print(str(ts), "->", val)
+
+    print(f"\nTOTAL MOVING AVERAGE POINTS: {len(result)}")'''
+
 
 
 

@@ -17,7 +17,6 @@ close = np.array([row[4] for row in data])
 open_ = np.array([row[1] for row in data])
 dates = np.array([np.datetime64(ts,"D") for ts in timestamps])
 
-
 # Dataset start & end dates
 start_date = dates.min()
 end_date = dates.max()
@@ -55,8 +54,7 @@ def volume_spike_detector():
     print(f"TOTAL SPIKES: {len(details['Spike Points'])}")
 
 
-# STILL IN PROGRESS⚠️
-'''def moving_average():
+def moving_average():
     try:
         days = int(input("Enter number of days for moving average: "))
     except ValueError:
@@ -81,9 +79,57 @@ def volume_spike_detector():
     for ts, val in result[-10:]:   # last 10 values
         print(str(ts), "->", val)
 
-    print(f"\nTOTAL MOVING AVERAGE POINTS: {len(result)}")'''
+    print(f"\nTOTAL MOVING AVERAGE POINTS: {len(result)}")
 
+'''IN PROGRESS (RIGHT NOW GIVES WRONG INPUT)'''
+# def high_low_range():
 
+#     try:
+#         want = input("Enter 1 for one day analysis\nEnter 2 for multiple days analysis: ")
+#         if want not in ["1","2"]:
+#             print("Please reply in 1 or 2")
+#             return
+#     except ValueError:
+#         print("Invalid input!")
+#         return    
+#     if want == "1":
+#         date = input("Date (YYYY-MM-DD): ")
+    
+#         try:
+#             check = np.datetime64(datetime.strptime(date,"%Y-%m-%d").date(),"D")
+#         except ValueError:
+#             print("Invalid Date Format!")
+#             return
+#         if check not in dates:
+#              print("Date is out of range.")
+#              return
+#         mask = dates==check
+#         selected_low = low[mask]
+#         selected_high = high[mask]
+#         print(f"Details of {check}\nLow = {np.min(selected_low)}\nHigh = {np.max(selected_high)}\nRange = {(np.max(selected_high))-(np.min(selected_low)):.2f}")
+ 
+#     elif want=="2":
+#                 from_date = input("Date (YYYY-MM-DD): ")
+#                 to_date = input("Date (YYYY-MM-DD): ")
+#                 try: 
+#                     check1 = np.datetime64(datetime.strptime(from_date,"%Y-%m-%d").date(),"D")
+#                     check2 = np.datetime64(datetime.strptime(to_date,"%Y-%m-%d").date(),"D")
+#                 except ValueError:
+#                     print("Invalid date format!")
+#                     return
+#                 if check1 or check2 not in dates:
+#                      print("Date is out of range.")
+#                      return
+                
+#                 mask = (check1<=dates) & (check2>=dates)
+#                 selected_low2 = low[mask]
+#                 selected_high2 = high[mask]
+
+#                 print(f"Details from {check1} to {check2}\n") 
+
+    
+    
+        
 
 
 

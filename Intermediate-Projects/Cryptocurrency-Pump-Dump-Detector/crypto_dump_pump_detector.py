@@ -17,9 +17,12 @@ close = np.array([row[4] for row in data])
 open_ = np.array([row[1] for row in data])
 dates = np.array([np.datetime64(ts,"D") for ts in timestamps])
 
+
 # Dataset start & end dates
 start_date = dates.min()
 end_date = dates.max()
+
+
 
 
 def volume_spike_detector():
@@ -81,105 +84,61 @@ def moving_average():
 
     print(f"\nTOTAL MOVING AVERAGE POINTS: {len(result)}")
 
-'''IN PROGRESS (RIGHT NOW GIVES WRONG INPUT)'''
-# def high_low_range():
 
-#     try:
-#         want = input("Enter 1 for one day analysis\nEnter 2 for multiple days analysis: ")
-#         if want not in ["1","2"]:
-#             print("Please reply in 1 or 2")
-#             return
-#     except ValueError:
-#         print("Invalid input!")
-#         return    
-#     if want == "1":
-#         date = input("Date (YYYY-MM-DD): ")
-    
-#         try:
-#             check = np.datetime64(datetime.strptime(date,"%Y-%m-%d").date(),"D")
-#         except ValueError:
-#             print("Invalid Date Format!")
-#             return
-#         if check not in dates:
-#              print("Date is out of range.")
-#              return
-#         mask = dates==check
-#         selected_low = low[mask]
-#         selected_high = high[mask]
-#         print(f"Details of {check}\nLow = {np.min(selected_low)}\nHigh = {np.max(selected_high)}\nRange = {(np.max(selected_high))-(np.min(selected_low)):.2f}")
- 
-#     elif want=="2":
-#                 from_date = input("Date (YYYY-MM-DD): ")
-#                 to_date = input("Date (YYYY-MM-DD): ")
-#                 try: 
-#                     check1 = np.datetime64(datetime.strptime(from_date,"%Y-%m-%d").date(),"D")
-#                     check2 = np.datetime64(datetime.strptime(to_date,"%Y-%m-%d").date(),"D")
-#                 except ValueError:
-#                     print("Invalid date format!")
-#                     return
-#                 if check1 or check2 not in dates:
-#                      print("Date is out of range.")
-#                      return
-                
-#                 mask = (check1<=dates) & (check2>=dates)
-#                 selected_low2 = low[mask]
-#                 selected_high2 = high[mask]
+def high_low_range():
+    want = input("Enter 1 for one day analysis\nEnter 2 for multiple days analysis: ")
+    if want not in ["1", "2"]:
+        print("Please reply in 1 or 2")
+        return
 
-#                 print(f"Details from {check1} to {check2}\n") 
+    if want == "1":
+        date = input("Date (YYYY-MM-DD): ")
+        try:
+            check = np.datetime64(datetime.strptime(date, "%Y-%m-%d").date(), "D")
+        except ValueError:
+            print("Invalid Date Format!")
+            return
+        if check not in dates:
+            print("Date is out of range.")
+            return
 
-    
-    
-        
+        mask = dates == check
+        selected_low = low[mask]
+        selected_high = high[mask]
 
+        print(f"Details of {check}\n"
+              f"Low = {np.min(selected_low)}\n"
+              f"High = {np.max(selected_high)}\n"
+              f"Range = {np.max(selected_high) - np.min(selected_low):.2f}")
 
+    elif want == "2":
+        from_date = input("From (YYYY-MM-DD): ")
+        to_date = input("To (YYYY-MM-DD): ")
 
-        
-    
+        try:
+            check1 = np.datetime64(datetime.strptime(from_date, "%Y-%m-%d").date(), "D")
+            check2 = np.datetime64(datetime.strptime(to_date, "%Y-%m-%d").date(), "D")
+        except ValueError:
+            print("Invalid Date Format!")
+            return
 
+        if check1 < start_date or check2 > end_date:
+            print("Dates are out of range!")
+            return
 
-    
+        num_days = (check2 - check1).astype(int) + 1  # correct number of days
 
-    
+        for i in range(num_days):
+            current_day = check1 + np.timedelta64(i, "D")
+            mask_day = dates == current_day
 
-    
+            if not np.any(mask_day):  # skip if no data for that day
+                continue
 
-    
-    
-    
+            day_low = low[mask_day]
+            day_high = high[mask_day]
 
-
-    
-
-
-    
-
-
-
-
-
-
-
-
-    
-
-    
-
-
-
-
-    
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
+            print(f"Details of {current_day}\n"
+                  f"Low = {np.min(day_low)}\n"
+                  f"High = {np.max(day_high)}\n"
+                  f"Range = {np.max(day_high) - np.min(day_low):.2f}")

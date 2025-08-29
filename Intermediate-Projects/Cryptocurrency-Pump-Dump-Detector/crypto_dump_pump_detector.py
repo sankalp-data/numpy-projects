@@ -17,11 +17,9 @@ close = np.array([row[4] for row in data])
 open_ = np.array([row[1] for row in data])
 dates = np.array([np.datetime64(ts,"D") for ts in timestamps])
 
-
 # Dataset start & end dates
 start_date = dates.min()
 end_date = dates.max()
-
 
 
 
@@ -129,7 +127,7 @@ def high_low_range():
         num_days = (check2 - check1).astype(int) + 1  # correct number of days
 
         for i in range(num_days):
-            current_day = check1 + np.timedelta64(i, "D")
+            current_day = check1 + i
             mask_day = dates == current_day
 
             if not np.any(mask_day):  # skip if no data for that day
@@ -142,3 +140,7 @@ def high_low_range():
                   f"Low = {np.min(day_low)}\n"
                   f"High = {np.max(day_high)}\n"
                   f"Range = {np.max(day_high) - np.min(day_low):.2f}")
+            
+'''IN PROGRESS'''
+def combine_spike_detector():
+    pass

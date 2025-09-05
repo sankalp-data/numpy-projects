@@ -38,7 +38,7 @@ def parse_date(**kwargs):
         try:
             check3 = np.datetime64(datetime.strptime(kwargs["date"],"%Y-%m-%d").date(),"D")
         except ValueError:
-            print("Invalid date format!\nCorrect fromat: YYYY-MM-DD")
+            print("Invalid date format!\nCorrect format: YYYY-MM-DD")
             return False
         if check3 not in dates:
             print("Date is out of range.")

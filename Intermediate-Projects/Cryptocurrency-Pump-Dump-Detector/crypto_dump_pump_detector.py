@@ -20,24 +20,37 @@ dates = np.array([np.datetime64(ts,"D") for ts in timestamps])
 # Dataset start & end dates
 start_date = dates.min()
 end_date = dates.max()
+
+def parse_date(**kwargs):
+    if len(kwargs)==2:
+        try:
+            check1 = np.datetime64(datetime.strptime(kwargs["from_date"],"%Y-%m-%d").date(),"D")
+            check2 = np.datetime64(datetime.strptime(kwargs["to_date"],"%Y-%m-%d").date(),"D")
+        except ValueError:
+            print("Invalid date format!\nCorrect format: YYYY-MM-DD")
+            return False,False
+
+        if check1<start_date or check2>end_date:
+            print("Dates are out of range!")
+            return False,False
+        return check1,check2
+    elif len(kwargs)==1:
+        try:
+            check3 = np.datetime64(datetime.strptime(kwargs["date"],"%Y-%m-%d").date(),"D")
+        except ValueError:
+            print("Invalid date format!\nCorrect fromat: YYYY-MM-DD")
+            return False
+        if check3 not in dates:
+            print("Date is out of range.")
+            return False
+        return check3
+        
+
 def volume_spike_detector():
-
-    from_date = input("From (YYYY-MM-DD): ")
-    to_date = input("To (YYYY-MM-DD): ")
-    details = {}
-
-    try:
-        check1 = np.datetime64(datetime.strptime(from_date,"%Y-%m-%d").date(),"D")
-        check2 = np.datetime64(datetime.strptime(to_date,"%Y-%m-%d").date(),"D")
-
-    except ValueError:
-        print("Invalid date format!\nCorrect format: YYYY-MM-DD")
-        return 
-    
-    if check1<start_date or check2>end_date:
-        print("Dates are out of range!")
+    check1,check2 = parse_date(from_date=input("From Date (YYYY-MM-YY): "),to_date=input("To Date (YYYY-MM-DD):"))
+    if check1==False or check2==False:
         return
-    
+    details = {} 
     mask = (check1<=dates) & (check2>=dates)
     selected_vol = volume[mask]
 
@@ -45,9 +58,7 @@ def volume_spike_detector():
     details[f"Average Volume from {check1} to {check2}"] = float(np.mean(selected_vol))
     spike_threshold = 1.5*(np.mean(selected_vol))
     indices = np.where(selected_vol > spike_threshold)[0]
-    details["Spike Points"] = timestamps[indices].astype(str).tolist()
-
-    
+    details["Spike Points"] = timestamps[indices].astype(str).tolist()    
     pprint(details)
     print(f"TOTAL SPIKES: {len(details['Spike Points'])}")
 
@@ -87,16 +98,9 @@ def high_low_range():
         return
 
     if want == "1":
-        date = input("Date (YYYY-MM-DD): ")
-        try:
-            check = np.datetime64(datetime.strptime(date, "%Y-%m-%d").date(), "D")
-        except ValueError:
-            print("Invalid Date Format!")
+        check = parse_date(date=input("Date (YYYY-MM-DD): "))
+        if check==False:
             return
-        if check not in dates:
-            print("Date is out of range.")
-            return
-
         mask = dates == check
         selected_low = low[mask]
         selected_high = high[mask]
@@ -107,20 +111,10 @@ def high_low_range():
               f"Range = {np.max(selected_high) - np.min(selected_low):.2f}")
 
     elif want == "2":
-        from_date = input("From (YYYY-MM-DD): ")
-        to_date = input("To (YYYY-MM-DD): ")
-
-        try:
-            check1 = np.datetime64(datetime.strptime(from_date, "%Y-%m-%d").date(), "D")
-            check2 = np.datetime64(datetime.strptime(to_date, "%Y-%m-%d").date(), "D")
-        except ValueError:
-            print("Invalid Date Format!")
+        check1,check2 = parse_date(from_date=input("From Date (YYYY-MM-DD): "),to_date=input("To Date (YYYY-MM-DD): "))
+        if check1==False and check2==False:
             return
-
-        if check1 < start_date or check2 > end_date:
-            print("Dates are out of range!")
-            return
-
+        
         num_days = (check2 - check1).astype(int) + 1  # correct number of days
 
         for i in range(num_days):
@@ -137,24 +131,14 @@ def high_low_range():
                   f"Low = {np.min(day_low)}\n"
                   f"High = {np.max(day_high)}\n"
                   f"Range = {np.max(day_high) - np.min(day_low):.2f}")
-            
+
+
 '''STILL IN PROGRESS'''
 def combine_spike_detector():
+    check1,check2 = parse_date(from_date=input("From Date (YYYY-MM-DD): "),to_date=input("To Date (YYYY-MM-DD): "))
+    if check1==False and check2==False:
+        return
     details = {}
-    from_date = input("Date (YYYY-MM-DD): ")
-    to_date = input("Date (YYYY-MM-DD): ")
-
-    try:
-        check1 = np.datetime64(datetime.strptime(from_date, "%Y-%m-%d").date(), "D")
-        check2 = np.datetime64(datetime.strptime(to_date, "%Y-%m-%d").date(), "D")
-    except ValueError:
-        print("Wrong date format!")
-        return
-
-    if check1 < start_date or check2 > end_date:
-        print("Dates are out of range!")
-        return
-
     # Select dates
     selected_dates = (check1 <= dates) & (dates <= check2)
 
@@ -182,14 +166,4 @@ def combine_spike_detector():
     details["Spike Points"] = timestamps[selected_dates][indices].astype(str).tolist()
 
     pprint(details)
-    print(f"TOTAL SPIKES: {len(details['Spike Points'])}")
-
-
-
-
-
-    
-        
-
-    
-    
+    print(f"TOTAL SPIKES: {len(details["Spike Points"])}")

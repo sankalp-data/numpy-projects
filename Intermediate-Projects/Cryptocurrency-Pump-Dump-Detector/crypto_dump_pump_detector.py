@@ -22,6 +22,20 @@ start_date = dates.min()
 end_date = dates.max()
 
 def parse_date(from_date=None, to_date=None, date=None):
+    '''Parse and validate dates provided by the user.
+
+    Args:
+        from_date (str, optional): Start date in format YYYY-MM-DD.
+        to_date (str, optional): End date in format YYYY-MM-DD.
+        date (str, optional): Single date in format YYYY-MM-DD.
+
+    Returns:
+        numpy.datetime64 or tuple:
+            - If `from_date` and `to_date` are provided → returns (check1, check2)
+            - If `date` is provided → returns check3
+
+    Raises:
+        ValueError: If the date format is invalid or dates are out of dataset range.'''
     if from_date and to_date:
         try:
             check1 = np.datetime64(datetime.strptime(from_date, "%Y-%m-%d").date(), "D")
@@ -51,6 +65,18 @@ def parse_date(from_date=None, to_date=None, date=None):
         
 
 def volume_spike_detector():
+    """
+    Detect spikes in trading volume within a given date range.
+
+    Prompts the user for a start and end date, calculates the average volume,
+    and flags all timestamps where volume exceeds 1.5 times the average.
+
+    Returns:
+        None. Prints the details including:
+            - Average volume for the period
+            - List of spike timestamps
+            - Total number of spikes
+    """
     check1,check2 = parse_date(from_date=input("From Date (YYYY-MM-YY): "),to_date=input("To Date (YYYY-MM-DD):"))
     details = {} 
     mask = (check1<=dates) & (check2>=dates)
@@ -64,6 +90,17 @@ def volume_spike_detector():
     print(f"TOTAL SPIKES: {len(details['Spike Points'])}")
 
 def moving_average():
+    """
+    Calculate and display the moving average of the close price.
+
+    Prompts the user to input the number of days for the moving average window.
+    Computes rolling averages on close prices and prints the last 10 results.
+
+    Returns:
+        None. Prints:
+            - Last 10 moving average values with timestamps
+            - Total number of calculated points
+    """
     try:
         days = int(input("Enter number of days for moving average: "))
     except ValueError:
@@ -92,6 +129,16 @@ def moving_average():
 
 
 def high_low_range():
+    """
+    Analyze the high-low price range for one or multiple days.
+
+    Prompts the user:
+        - Option 1: Enter a single date → shows low, high, and daily range.
+        - Option 2: Enter a date range → shows low, high, and range for each day.
+
+    Returns:
+        None. Prints details for each day analyzed.
+    """
     want = input("Enter 1 for one day analysis\nEnter 2 for multiple days analysis: ")
     if want not in ["1", "2"]:
         print("Please reply in 1 or 2")
@@ -128,8 +175,23 @@ def high_low_range():
                   f"Range = {np.max(day_high) - np.min(day_low):.2f}")
 
 
-'''STILL IN PROGRESS'''
+
 def combine_spike_detector():
+    """
+    Detect spikes based on combined conditions (volume, price change, and volatility).
+
+    Prompts the user for a date range. Calculates average thresholds for:
+        - Volume (1.5 * avg volume)
+        - Price change (2 * avg price change between open and close)
+        - Volatility (1.5 * avg high-low range)
+
+    Flags timestamps where at least 2 out of 3 conditions are met.
+
+    Returns:
+        None. Prints:
+            - List of combined spike timestamps
+            - Total number of spikes detected
+    """
     check1,check2 = parse_date(from_date=input("From Date (YYYY-MM-DD): "),to_date=input("To Date (YYYY-MM-DD): "))
     details = {}
     # Select dates
@@ -158,5 +220,12 @@ def combine_spike_detector():
     # Store results
     details["Spike Points"] = timestamps[selected_dates][indices].astype(str).tolist()
 
-    pprint(details)
     print(f"TOTAL SPIKES: {len(details["Spike Points"])}")
+    print("SPIKE POINTS👇")
+    return np.array(details["Spike Points"]).reshape(len(details["Spike Points"]),1)
+
+
+#"""IN PROGRESS🚀"""
+def post_spike_analysis():
+    spike_points = combine_spike_detector()
+

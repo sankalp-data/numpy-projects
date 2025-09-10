@@ -43,10 +43,9 @@ def parse_date(from_date=None, to_date=None, date=None):
         except ValueError:
             raise ValueError("Invalid date format! Correct format: YYYY-MM-DD")
 
-        if check1 < start_date or check2 > end_date:
-            raise ValueError("Dates are out of range!")
-
-        return check1, check2
+        if (check1 < start_date) | (check2 > end_date) | (check1 > end_date) | (check2 < start_date):
+            raise ValueError("Date(s) are out of range!")
+        return check1,check2
 
     elif date:
         try:
@@ -88,6 +87,8 @@ def volume_spike_detector():
     details["Spike Points"] = selected_timestamps[indices].astype(str).tolist()    
     pprint(details)
     print(f"TOTAL SPIKES: {len(details['Spike Points'])}")
+
+
 
 def moving_average():
     """
@@ -221,11 +222,35 @@ def combine_spike_detector():
     details["Spike Points"] = timestamps[selected_dates][indices].astype(str).tolist()
 
     print(f"TOTAL SPIKES: {len(details["Spike Points"])}")
-    print("SPIKE POINTS👇")
+    print("SPIKE POINTS📈\n")
     return np.array(details["Spike Points"]).reshape(len(details["Spike Points"]),1)
 
 
-#"""IN PROGRESS🚀"""
+"""IN PROGRESS🚀"""
 def post_spike_analysis():
-    spike_points = combine_spike_detector()
+    """
+    Analyze market behavior after detected spikes.
 
+    This function takes spike points (from combine_spike_detector) and evaluates
+    post-spike performance, such as price movement, volatility, and volume trends
+    within a specified time window after each spike.
+    """
+    spike_points = combine_spike_detector().flatten().astype(np.datetime64)
+    spike_analysis = {} #Stores all post spike analysis data.
+    n_hours_analysis = int(input("Next Hours/Days (Enter 1 for Hour Analysis or Enter 2 for Days Analysis): ")) #Decide how many periods (hours/days) after the spike you want to study.
+    if n_hours_analysis not in [1,2]:
+        raise ValueError("Reply either 1 or 2")
+    if n_hours_analysis==1:
+        hours = int(input("Hours: "))
+        if hours not in list(range(1,9)):
+            raise ValueError("Spike effect beyond 8 hours is negligible. Please choose 1-8 hours.")
+
+        for timestamp in spike_points:
+            after_hours_timestamp = timestamp + np.timedelta64(hours,"h") #Adding user's input hours in each spike points.
+            selected_timestamp = (timestamp<=timestamps) & (after_hours_timestamp>=timestamps)
+            spike_analysis[f"Post spike analysis after {hours}Hrs of {timestamp}"] = np.mean(volume[selected_timestamp])
+        
+    pprint(spike_analysis)
+# print(volume[timestamps==np.datetime64("2024-03-17T06:00:00")])
+
+# post_spike_analysis()

@@ -232,7 +232,7 @@ def post_spike_analysis():
     Analyze market behavior after detected spikes.
 
     This function takes spike points (from combine_spike_detector) and evaluates
-    post-spike performance, such as price movement, volatility, and volume trends
+    post-spike performance, such as price movement and volume trends
     within a specified time window after each spike.
     """
     spike_points = combine_spike_detector().flatten().astype(np.datetime64)
@@ -244,13 +244,24 @@ def post_spike_analysis():
         hours = int(input("Hours: "))
         if hours not in list(range(1,9)):
             raise ValueError("Spike effect beyond 8 hours is negligible. Please choose 1-8 hours.")
-
+        
         for timestamp in spike_points:
             after_hours_timestamp = timestamp + np.timedelta64(hours,"h") #Adding user's input hours in each spike points.
-            selected_timestamp = (timestamp<=timestamps) & (after_hours_timestamp>=timestamps)
-            spike_analysis[f"Post spike analysis after {hours}Hrs of {timestamp}"] = np.mean(volume[selected_timestamp])
+            selected_timestamp = (timestamp<timestamps) & (after_hours_timestamp>=timestamps)
+            selected_volume = float(np.mean(volume[selected_timestamp])) - volume[timestamp==timestamps]
+            selected_price = float(np.mean(close[selected_timestamp])) - close[timestamp==timestamps]
+            spike_analysis[f"Post Spike Analysis After {hours}Hrs of {timestamp}"] = f"Volume Change After Spike: {((selected_volume/volume[timestamp==timestamps])*100)[0]:.2f}% Price Change After Spike: {(((selected_price/close[timestamp==timestamps]))*100)[0]:.2f}%"
         
-    pprint(spike_analysis)
-# print(volume[timestamps==np.datetime64("2024-03-17T06:00:00")])
+    elif n_hours_analysis==2:
+        days = int(input("Days (1-3): "))
+        if days not in list(range(1,4)):
+            raise ValueError("Spike effect beyond 3 days is negligible. Please choose 1-3 days.")
+        for timestamp2 in spike_points:
+            after_hours_timestamp2 = timestamp2 + np.timedelta64(days,"D")
+            selected_timestamp2 = (timestamp2<timestamps) & (after_hours_timestamp2>=timestamps)
+            selected_volume2 = float(np.mean(volume[selected_timestamp2])) - volume[timestamp2==timestamps]
+            selected_price2 = float(np.mean(close[selected_timestamp2])) - close[timestamp2==timestamps]
+            spike_analysis[f"Post Spike Analysis After {days} Days of {timestamp2}"] = f"Volume Change After Spike: {((selected_volume2/volume[timestamp2==timestamps])*100)[0]:.2f}% Price Change After Spike: {(((selected_price2/close[timestamp2==timestamps]))*100)[0]:.2f}%"
 
-# post_spike_analysis()
+
+    # pprint(spike_analysis)

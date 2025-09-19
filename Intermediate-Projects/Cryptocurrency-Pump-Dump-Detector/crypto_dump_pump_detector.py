@@ -1,6 +1,6 @@
 import numpy as np
 from datetime import datetime
-from pprint import pprint
+from collections import Counter
 
 # Wherever I have written the path of my file, you have to replace it with your own file path.
 
@@ -131,29 +131,57 @@ class CryptoAnalyzer:
 
             print(f"\nTOTAL MOVING AVERAGE POINTS: {len(result)}")
 
+    def post_spike_analysis(self, hours: int, from_date, to_date):
+
+        if not 1 <= hours <= 8:
+            raise ValueError("Please enter hours between 1 and 8. Beyond 8 hours, spike change is negligible.")
+
+
+        spike_points = (
+            self.combine_spike_detector(from_date=from_date, to_date=to_date)
+            .flatten()
+            .astype(np.datetime64)
+        )
+
+
+        for spike_point in spike_points:
+
+            end_time = spike_point + np.timedelta64(hours, "h")
+
+
+            mask = (self.timestamps > spike_point) & (self.timestamps <= end_time)
+
+            if not np.any(mask):
+                print(f"No data available for {hours} hours after spike at {spike_point}")
+                continue
+
+
+            spike_vol = self.volume[self.timestamps == spike_point][0]
+            future_avg_vol = np.mean(self.volume[mask])
+            volume_change = ((future_avg_vol - spike_vol) / spike_vol) * 100
+
+            spike_price = self.close[self.timestamps == spike_point][0]
+            future_avg_price = np.mean(self.close[mask])
+            price_change = ((future_avg_price - spike_price) / spike_price) * 100
+
+            spike_range = self.high[self.timestamps == spike_point][0] - self.low[self.timestamps == spike_point][0]
+            future_avg_range = np.mean(self.high[mask] - self.low[mask])
+            range_change = ((future_avg_range - spike_range) / spike_range) * 100 if spike_range != 0 else 0
+
+            
+            print(f"\n📊 Post Spike Analysis ({hours} hrs) for {spike_point}:")
+            print(f"  - Volume Change: {volume_change:.2f}%")
+            print(f"  - Price Change: {price_change:.2f}%")
+            print(f"  - Range Change: {range_change:.2f}%")
+    #In Progress    
+    def spike_seasonality(self):
+        pass
+        
+        
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
 

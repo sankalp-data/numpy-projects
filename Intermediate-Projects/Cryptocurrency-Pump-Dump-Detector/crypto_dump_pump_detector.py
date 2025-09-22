@@ -1,6 +1,7 @@
 import numpy as np
 from datetime import datetime
-from collections import Counter
+from collections import Counter,OrderedDict
+from pprint import pprint
 
 # Wherever I have written the path of my file, you have to replace it with your own file path.
 
@@ -173,16 +174,35 @@ class CryptoAnalyzer:
             print(f"  - Volume Change: {volume_change:.2f}%")
             print(f"  - Price Change: {price_change:.2f}%")
             print(f"  - Range Change: {range_change:.2f}%")
-    #In Progress    
-    def spike_seasonality(self):
-        pass
-        
-        
 
+    #In Progress🚀    
+    def spike_seasonality(self, from_date, to_date):
 
+        # Get spike timestamps
+        spike_points = (
+            self.combine_spike_detector(from_date=from_date, to_date=to_date)
+            .flatten()
+            .astype(np.datetime64)
+        )
 
-    
+        if len(spike_points) == 0:
+            print("⚠️ No spikes found in the given range.")
+            return OrderedDict()
 
+        # Extract hour part
+        hours = [str(np.datetime64(ts, "h"))[-2:] for ts in spike_points]
 
+        # Count spikes per hour
+        counts = Counter(hours)
 
+        # Sort by natural hour order (00–23)
+        ordered_counts = OrderedDict(sorted(counts.items(), key=lambda x: int(x[0])))
 
+        # Pretty-print summary
+        print("\n🕒 Spike Seasonality (by Hour of Day)")
+        print("Hour | Count")
+        print("-----|------")
+        for hour, count in ordered_counts.items():
+            print(f"{hour}   | {count}")
+
+        return ordered_counts

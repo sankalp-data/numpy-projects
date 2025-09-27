@@ -175,7 +175,7 @@ class CryptoAnalyzer:
             print(f"  - Price Change: {price_change:.2f}%")
             print(f"  - Range Change: {range_change:.2f}%")
 
-    #In Progress🚀    
+        
     def spike_seasonality(self, from_date, to_date):
 
         # Get spike timestamps
